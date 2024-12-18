@@ -15,6 +15,7 @@ from flask import Flask,render_template,request
 import time
 from selenium import webdriver
 from selenium.webdriver import Chrome
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -35,11 +36,8 @@ stop_words = stopwords.words('english')
 def returnytcomments(url):
     data = []
 
-    # Path to ChromeDriver executable
-    chrome_driver_path = r'YouTube-Comments-Sentiment-Analysis-main\chromedriver-win64\chromedriver.exe'
-
     # Initialize ChromeDriver with specified ChromeDriver version
-    service = Service(chrome_driver_path)
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service)
 
     wait = WebDriverWait(driver, 15)
@@ -83,20 +81,20 @@ def create_wordcloud(clean_reviews):
     plt.imshow(wc, interpolation='bicubic') 
     plt.axis('off')
     plt.tight_layout()
-    CleanCache(directory='YouTube-Comments-Sentiment-Analysis-main\static\images')
-    plt.savefig('YouTube-Comments-Sentiment-Analysis-main\static\images\woc.png')
+    CleanCache(directory='Comment-analyser\static\images')
+    plt.savefig('Comment-analyser\static\images\woc.png')
     plt.close()
     
 def returnsentiment(x):
-    score =  sia.polarity_scores(x)['compound']
-    
-    if score>0:
+    score = sia.polarity_scores(x)['compound']
+    if score > 0.05:
         sent = 'Positive'
-    elif score==0:
+    elif score < -0.05:
         sent = 'Negative'
     else:
         sent = 'Neutral'
-    return score,sent
+    return score, sent
+
 
 
 @app.route('/')
