@@ -1,0 +1,9 @@
+Flask
+selenium
+webdriver_manager
+nltk
+wordcloud
+joblib
+beautifulsoup4
+requests
+matplotlib
