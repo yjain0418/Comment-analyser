@@ -1,11 +1,5 @@
-import re
 import os
 import nltk
-import joblib
-import requests
-import numpy as np
-from bs4 import BeautifulSoup
-import urllib.request as urllib
 import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -14,13 +8,13 @@ from wordcloud import WordCloud,STOPWORDS
 from flask import Flask,render_template,request
 import time
 from selenium import webdriver
-from selenium.webdriver import Chrome
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 
 nltk.download('vader_lexicon')
 nltk.download('stopwords')
@@ -35,10 +29,13 @@ stop_words = stopwords.words('english')
 
 def returnytcomments(url):
     data = []
+    
+    options = Options()
+    options.add_argument("--headless")
 
     # Initialize ChromeDriver with specified ChromeDriver version
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=options)
 
     wait = WebDriverWait(driver, 15)
     driver.get(url)
