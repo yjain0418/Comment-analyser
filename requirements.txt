@@ -7,3 +7,4 @@ joblib
 beautifulsoup4
 requests
 matplotlib
+gunicorn
